@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  align-items: center;
+  width: 30%;
+  outline: 2px solid var(--primary-color);
+  border-radius: 50px;
+}
+.searchbar {
+  outline: 2px solid var(--primary-color);
+  border: none;
+  border-radius: 50px;
+  font-family: inherit;
+  background-color: transparent;
+}
+.searchbar::placeholder {
+  color: #7378c5;
+}
+.searchbar:focus {
+  outline: none;
+  background-color: var(--primary-color);
+  color: #fff;
+}
