@@ -8,3 +8,6 @@
   padding: 25px;
   overflow: scroll;
 }
+.popular-movies-row {
+  height: inherit;
+}

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { Carousel, Row, Col } from "react-bootstrap";
 import MovieCard from "../MovieCard/MovieCard";
 import "./MainArea.css";
 
 const MainArea = () => {
   const [popularMovieData, setPopularMovieData] = useState([]);
+  const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/3/movie/popular?api_key=${process.env.REACT_APP_MY_API_KEY}`
@@ -14,9 +17,12 @@ const MainArea = () => {
       .then((response) => {
         setPopularMovieData(response.data.results);
         console.log(response.data.results);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
+        setError(true);
       });
   }, []);
   const ratingFilter = (rating) => {
@@ -30,21 +36,41 @@ const MainArea = () => {
   };
   return (
     <div className="MainArea">
-      {popularMovieData.length ? (
-        popularMovieData.map((movie) => {
-          return (
-            <MovieCard
-              key={movie.id}
-              img={`${process.env.REACT_APP_IMG_URL}${movie.backdrop_path}`}
-              movieTitle={movie.original_title}
-              rating={movie.vote_average}
-              description={movie.overview}
-              ratingClass={ratingFilter(movie.vote_average)}
-            />
-          );
-        })
+      {!isLoading ? (
+        error ? (
+          <h3 className="error">Server error! Please try again.</h3>
+        ) : (
+          <Carousel className="popular-movies-carousel">
+            {popularMovieData.map((movie, index) => {
+              if (index % 4 === 0) {
+                // Kreira novi red za svaki četvrti film
+                const moviesForRow = popularMovieData.slice(index, index + 4);
+
+                return (
+                  <Carousel.Item>
+                    <Row className="popular-movies-row">
+                      {moviesForRow.map((movie) => (
+                        <Col key={movie.id} sm={3}>
+                          <MovieCard
+                            img={`${process.env.REACT_APP_IMG_URL}${movie.backdrop_path}`}
+                            movieTitle={movie.original_title}
+                            rating={movie.vote_average}
+                            description={movie.overview}
+                            ratingClass={ratingFilter(movie.vote_average)}
+                          />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Carousel.Item>
+                );
+              } else {
+                return null; // Povratak null za ostale filmove koji nisu na početku reda
+              }
+            })}
+          </Carousel>
+        )
       ) : (
-        <h3>No Movie data</h3>
+        <h3 className="loading">Loading...</h3>
       )}
     </div>
   );
