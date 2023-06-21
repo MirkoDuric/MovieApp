@@ -8,6 +8,18 @@
   padding: 25px;
   overflow: scroll;
 }
-.popular-movies-row {
-  height: inherit;
+.carousel {
+  min-height: 350px;
+  flex-wrap: wrap;
+}
+.carousel-div {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  width: 100%;
+}
+.carousel-item {
+}
+.carousel-row {
+  width: 100%;
 }
